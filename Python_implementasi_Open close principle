@@ -1,0 +1,37 @@
+from abc import ABC, abstractmethod
+
+class PaymentMethod(ABC):
+    @abstractmethod
+    def process_payment(self, amount):
+        pass
+
+#Implementasi pembayaran kartu
+class CreditCardPayment(PaymentMethod):
+    def process_payment(self, amount):
+        print(f"Memproses pembayaran kartu kredit sebesar {amount} mohon tunggu sebentar")
+
+#implementasi pembayaran Gopay
+class GOPAYPayment(PaymentMethod):
+    def process_payment(self, amount):
+        print(f"Memproses pembayaran GOPAY sebesar {amount} Berhasil")
+
+#implementasi processor
+class PaymentProcessor:
+    def __init__(self):
+        self.payment_methods = {}
+
+    def register_payment_method(self, payment_type, payment_method):
+        self.payment_methods[payment_type] = payment_method
+
+    def process_payment(self, payment_type, amount):
+        try:
+            self.payment_methods[payment_type].process_payment(amount)
+        except KeyError:
+            raise ValueError("Metode pembayaran tidak dikenal")
+
+#
+processor = PaymentProcessor()
+processor.register_payment_method("credit_card", CreditCardPayment())
+processor.register_payment_method("gopay", GOPAYPayment())
+processor.process_payment("credit_card", 100000)
+processor.process_payment("gopay", 200000)
